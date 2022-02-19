@@ -1,10 +1,12 @@
-const Header = ({ title, subTitle, rightBtn }) => {
+import { Link } from 'react-router-dom';
+
+const Header = ({ title, path, subTitle, rightBtn }) => {
   return (
     <header className="h-18 sticky top-0 mb-2 bg-slate-50 shadow-sm z-40">
       <div className="h-16 flex flex-row items-center px-3 py-2">
         {/* // * Back Button */}
         <div className="basis-2/8 text-center mx-3">
-          <a href="/" className="text-slate-900">
+          <Link to={path} className="text-slate-900">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
@@ -19,7 +21,7 @@ const Header = ({ title, subTitle, rightBtn }) => {
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
               />
             </svg>
-          </a>
+          </Link>
         </div>
         {/* //* Header Title */}
         <div className="basis-5/8 grow text-slate-900 px-2">

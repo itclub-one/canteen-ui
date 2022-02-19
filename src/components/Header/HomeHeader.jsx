@@ -1,5 +1,6 @@
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import { Link } from 'react-router-dom';
 
 function DeleteInactiveIcon(props) {
   return (
@@ -39,7 +40,15 @@ function DeleteActiveIcon(props) {
   );
 }
 
-const HomeHeader = () => {
+function MyLink({ href, children, ...rest }) {
+  return (
+    <Link to={href}>
+      <p {...rest}>{children}</p>
+    </Link>
+  );
+}
+
+const HomeHeader = ({ path }) => {
   return (
     <header className="h-18 sticky top-0 mb-2 bg-slate-50 shadow-sm z-40">
       <div className="h-16 flex flex-row-reverse items-center px-3">
@@ -75,33 +84,33 @@ const HomeHeader = () => {
               <div className="px-1 py-1 ">
                 <Menu.Item>
                   {({ active }) => (
-                    <a
-                      href="/"
+                    <MyLink
+                      href={path.profile}
                       className={`${
                         active ? 'bg-indigo-500 text-white' : 'text-gray-900'
                       } group flex rounded-md items-center w-full px-2 py-2 text-sm active:bg-indigo-500 active:text-white`}
                     >
                       Profil
-                    </a>
+                    </MyLink>
                   )}
                 </Menu.Item>
                 <Menu.Item>
                   {({ active }) => (
-                    <a
-                      href="/"
+                    <MyLink
+                      href={path.order}
                       className={`${
                         active ? 'bg-indigo-500 text-white' : 'text-gray-900'
                       } group flex rounded-md items-center w-full px-2 py-2 text-sm active:bg-indigo-500 active:text-white`}
                     >
                       Pesanan Saya
-                    </a>
+                    </MyLink>
                   )}
                 </Menu.Item>
               </div>
               <div className="px-1 py-1">
                 <Menu.Item>
                   {({ active }) => (
-                    <a
+                    <MyLink
                       href="/"
                       className={`${
                         active ? 'bg-indigo-500 text-white' : 'text-gray-900'
@@ -119,7 +128,7 @@ const HomeHeader = () => {
                         />
                       )}
                       Keluar
-                    </a>
+                    </MyLink>
                   )}
                 </Menu.Item>
               </div>
@@ -127,7 +136,7 @@ const HomeHeader = () => {
           </Transition>
         </Menu>
         <div className="relative text-white">
-          <a href="/">
+          <Link to={path.cart}>
             <span
               className="w-4 h-4 rounded-full absolute left-4 bottom-4 leading-4 text-center bg-red-500"
               style={{ fontSize: '0.6rem' }}
@@ -148,7 +157,7 @@ const HomeHeader = () => {
                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
               />
             </svg>
-          </a>
+          </Link>
         </div>
       </div>
     </header>
