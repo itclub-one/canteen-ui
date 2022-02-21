@@ -45,7 +45,9 @@ const HomeCatalogue = () => {
 
   return (
     <>
-      <HomeHeader />
+      <HomeHeader
+        path={{ cart: '/cart', profile: '/profile', order: '/order' }}
+      />
 
       <SearchBar
         placeholder={'Cari Menu Favoritmu ...'}
@@ -61,7 +63,6 @@ const HomeCatalogue = () => {
           ></div>
         </div>
       )}
-      {console.log(stores)}
       {stores && (
         <ProductGroup stores={stores.stores} inputQuery={searchQuery} />
       )}
