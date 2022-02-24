@@ -48,7 +48,7 @@ function MyLink({ href, children, ...rest }) {
   );
 }
 
-const HomeHeader = ({ path }) => {
+const HomeHeader = ({ path, cartLength }) => {
   return (
     <header className="h-18 sticky top-0 mb-2 bg-slate-50 shadow-sm z-40">
       <div className="h-16 flex flex-row-reverse items-center px-3">
@@ -137,15 +137,17 @@ const HomeHeader = ({ path }) => {
         </Menu>
         <div className="relative text-white">
           <Link to={path.cart}>
-            <span
-              className="w-4 h-4 rounded-full absolute left-4 bottom-4 leading-4 text-center bg-red-500"
-              style={{ fontSize: '0.6rem' }}
-            >
-              9+
-            </span>
+            {cartLength >= 1 && (
+              <span
+                className="w-4 h-4 rounded-full absolute left-4 bottom-4 text-center leading-4 bg-red-600"
+                style={{ fontSize: '0.6rem' }}
+              >
+                {cartLength <= 9 ? cartLength : '9+'}
+              </span>
+            )}
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="w-6 h-6 text-gray-900"
+              className="w-6 h-6 text-gray-900 active:bg-indigo-200"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

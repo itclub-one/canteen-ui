@@ -1,26 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { CartState } from '../../context/Context';
+import { Link } from 'react-router-dom';
 import Header from '../../components/Header/Header';
 import ProductCart from '../../components/Product/ProductCart';
+import { ReactComponent as NoCart } from '../../assets/img/empty-cart.svg';
 
 const Cart = () => {
-  const [items, setItems] = useState({
-    count: 0,
-  });
+  const {
+    state: { cart },
+    dispatch,
+  } = CartState();
 
-  const handleChange = e => {
-    setItems({
-      count: parseInt(e.target.value),
-    });
+  const [total, setTotal] = useState();
+
+  useEffect(() => {
+    setTotal(
+      cart.reduce(
+        (acc, curr) => acc + parseInt(curr.user_price_rounded) * curr.qty,
+        0
+      )
+    );
+  }, [cart]);
+
+  const formatPrice = price => {
+    const rupiah = price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
+    return `Rp${rupiah}`;
   };
-
-  const decrease = () => {
-    if (items.count <= 1) {
-      return;
-    }
-    setItems({ count: items.count - 1 });
-  };
-
-  const increase = () => setItems({ count: items.count + 1 });
 
   return (
     <div className="flex flex-col min-h-screen justify-between">
@@ -32,34 +37,115 @@ const Cart = () => {
       />
 
       <main className="mb-auto">
-        <ProductCart
-          items={items}
-          handleChange={handleChange}
-          increase={increase}
-          decrease={decrease}
-        />
+        {cart.length === 0 && (
+          <div className="flex flex-col justify-center items-center my-28 text-gray-400">
+            <NoCart className="text-center" />
+            <h5 className="pt-5 font-bold text-lg text-gray-600">
+              Keranjangmu masih Kosong!
+            </h5>
+            <Link
+              to="/"
+              className="py-1 px-4 mt-3 bg-indigo-500 text-gray-100 rounded-md shadow-md outline-none"
+            >
+              Mulai Belanja
+            </Link>
+          </div>
+        )}
+        {cart.map(prod => (
+          <ProductCart
+            product={prod}
+            handler={{
+              change: e =>
+                dispatch({
+                  type: 'CHANGE_CART_QTY',
+                  payload: {
+                    id: prod.id,
+                    qty: parseInt(e.target.value),
+                  },
+                }),
+              changeNote: e =>
+                dispatch({
+                  type: 'CHANGE_CART_NOTE',
+                  payload: {
+                    id: prod.id,
+                    note: String(e.target.value),
+                  },
+                }),
+              increase: () =>
+                dispatch({
+                  type: 'CHANGE_CART_QTY',
+                  payload: {
+                    id: prod.id,
+                    qty: prod.qty + 1,
+                  },
+                }),
+              decrease: () => {
+                prod.qty < 1
+                  ? dispatch({
+                      type: 'REMOVE_FROM_CART',
+                      payload: prod,
+                    })
+                  : dispatch({
+                      type: 'CHANGE_CART_QTY',
+                      payload: {
+                        id: prod.id,
+                        qty: prod.qty - 1,
+                      },
+                    });
+              },
+              delete: () => {
+                dispatch({
+                  type: 'REMOVE_FROM_CART',
+                  payload: prod,
+                });
+              },
+            }}
+            key={prod.id}
+          />
+        ))}
       </main>
-
-      <footer className="h-48 sticky inset-x-0 bottom-0 rounded-t-lg bg-white border-t z-40 flex flex-col justify-evenly">
-        <div className="mx-4 border-t-2 border-indigo-200">
-          <h4 className="font-bold pt-4 pb-1">Detail Pembayaran</h4>
-          <ul className="text-sm text-gray-900">
-            <li className="flex flex-row justify-between">
-              <p>Jumlah Pesanan</p>
-              <b>{items.count} barang</b>
-            </li>
-            <li className="flex flex-row justify-between">
-              <p>Total Harga</p>
-              <b>Rp12.000</b>
-            </li>
-          </ul>
-        </div>
-        <div className="mx-4 mb-2">
-          <button className=" w-full py-2 rounded-md shadow-md text-base font-medium text-white  bg-indigo-500 active:bg-indigo-600 hover:bg-indigo-600 focus:ring-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2">
-            Pesan
-          </button>
-        </div>
-      </footer>
+      {cart.length > 0 && (
+        <footer className="h-48 sticky inset-x-0 bottom-0 rounded-t-lg bg-white border-t z-40 flex flex-col justify-evenly">
+          <div className="mx-4 border-t-2 border-indigo-200">
+            <h4 className="font-bold pt-4 pb-1">Detail Pembayaran</h4>
+            <ul className="text-sm text-gray-900">
+              <li className="flex flex-row justify-between">
+                <p>Jumlah Pesanan</p>
+                <b>
+                  {cart.reduce((n, { qty }) => n + qty, 0) <= 0
+                    ? '-'
+                    : cart.reduce((n, { qty }) => n + qty, 0) === 1
+                    ? `${cart.reduce((n, { qty }) => n + qty, 0)} item`
+                    : `${cart.reduce((n, { qty }) => n + qty, 0)} items`}
+                </b>
+              </li>
+              <li className="flex flex-row justify-between">
+                <p>Total Harga</p>
+                <b>{total ? formatPrice(total) : '-'}</b>
+              </li>
+            </ul>
+          </div>
+          <div className="mx-4 mb-2">
+            {total <= 100000 ? (
+              <button className=" w-full py-2 rounded-md shadow-md text-base font-medium text-white  bg-indigo-500 active:bg-indigo-600 hover:bg-indigo-600 focus:ring-indigo-500  focus:outline-none focus:ring-2 focus:ring-offset-2">
+                Pesan
+              </button>
+            ) : (
+              <>
+                <button
+                  className=" w-full py-2 rounded-md shadow-md text-base font-medium text-gray-500  bg-gray-200"
+                  disabled
+                >
+                  Pesan
+                </button>
+                <span className="py-1 m-0 text-xs text-red-600 font-normal float-right">
+                  Pesananmu melebihi limit
+                </span>
+              </>
+            )}
+          </div>
+        </footer>
+      )}
     </div>
   );
 };
