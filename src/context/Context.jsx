@@ -22,8 +22,6 @@ const Context = ({ children }) => {
         };
   });
 
-  const cart = state.cart;
-
   useEffect(() => {
     const getData = async () => {
       await axios
@@ -45,12 +43,8 @@ const Context = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (state !== undefined) {
-      console.log('state', state);
-      console.log(cart);
-      window.localStorage.setItem('cart', JSON.stringify(state));
-    }
-  }, [state, cart]);
+    window.localStorage.setItem('cart', JSON.stringify(state));
+  }, [state]);
 
   return <Cart.Provider value={{ state, dispatch }}>{children}</Cart.Provider>;
 };
