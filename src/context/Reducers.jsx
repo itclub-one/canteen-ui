@@ -34,14 +34,9 @@ export const cartReducer = (state, action) => {
     case 'CHANGE_CART_NOTE':
       return {
         ...state,
-        cart: [
-          ...state.cart,
-          state.cart.filter(c =>
-            c.id === action.payload.id
-              ? (c.note = action.payload.note)
-              : (c.note = '')
-          ),
-        ],
+        cart: state.cart.map(c =>
+          c.id === action.payload.id ? { ...c, note: action.payload.note } : c
+        ),
       };
     default:
       return state;
