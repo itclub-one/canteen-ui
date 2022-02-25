@@ -1,4 +1,4 @@
-const FooterCart = ({ cart, total, handleSubmit }) => {
+const FooterCart = ({ cart, total, handleSubmit, loading }) => {
   const formatPrice = price => {
     const rupiah = price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
     return `Rp${rupiah}`;
@@ -28,13 +28,20 @@ const FooterCart = ({ cart, total, handleSubmit }) => {
       {/* Button for checkout */}
       <form className="mx-4 mb-2" onSubmit={handleSubmit}>
         {total <= 100000 ? (
-          <button className=" w-full py-2 rounded-md shadow-md text-base font-medium text-white  bg-indigo-500 active:bg-indigo-600 hover:bg-indigo-600 focus:ring-indigo-500  focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:bg-indigo-700">
+          <button
+            className={`${
+              loading
+                ? 'opacity-50 cursor-not-allowed'
+                : 'active:bg-indigo-600 hover:bg-indigo-600 focus:ring-indigo-500  focus:outline-none focus:ring-2 focus:ring-offset-2'
+            } w-full py-2 rounded-md shadow-md text-base font-medium text-white  bg-indigo-500`}
+            disabled={loading}
+          >
             Pesan
           </button>
         ) : (
           <>
             <button
-              className=" w-full py-2 rounded-md shadow-md text-base font-medium text-gray-500  bg-gray-200"
+              className="w-full py-2 rounded-md shadow-md text-base font-medium focus:ring-indigo-500 cursor-not-allowed text-white  bg-indigo-500 focus:ring-offset-2 opacity-50"
               disabled
             >
               Pesan

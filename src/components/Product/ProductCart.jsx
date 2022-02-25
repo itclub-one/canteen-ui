@@ -78,9 +78,12 @@ const ProductCart = ({ product, handler }) => {
           <h4 className="font-bold text-sm text-gray-900">
             Rp{formatPrice(product.user_price_rounded)}
           </h4>
-          <p className="text-gray-600 text-sm">
-            <b>catatan:</b> Extra cheese, without garlic Lorem ipsum dolor sit
-            amet
+          <p className="text-gray-600 text-sm text-left">
+            <b>catatan:</b>{' '}
+            {product.note
+              ? product.note.slice(0, 60) +
+                (product.note.length > 60 ? '...' : '')
+              : '-'}
           </p>
           <div className="flex flex-row flex-wrap items-center justify-between">
             <div className="flex flex-row p-2 h-10 w-28 rounded-lg justify-between">
@@ -158,14 +161,13 @@ const ProductCart = ({ product, handler }) => {
                       <span className="font-medium text-gray-900 pb-1">
                         Tambahkan catatan
                       </span>
-                      <input
-                        type="text"
+                      <textarea
                         className="px-3 py-1 border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-indigo-500 block w-full rounded-md sm:text-sm focus:ring-1"
                         placeholder="Gak pake topping ya..."
                         maxLength={250}
-                        // value={product.note}
-                        // onChange={handler.changeNote}
-                      />
+                        value={product.note}
+                        onChange={handler.changeNote}
+                      ></textarea>
                       <span className="text-sm text-right text-gray-700">
                         {product.note.length}/250
                       </span>
