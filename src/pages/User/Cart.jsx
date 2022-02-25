@@ -1,6 +1,7 @@
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { CartState } from '../../context/Context';
+import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 import Header from '../../components/Header/Header';
 import EmptyCart from '../../layouts/static/EmptyCart';
 import ProductCart from '../../components/Product/ProductCart';
@@ -13,6 +14,7 @@ const Cart = () => {
   } = CartState();
 
   const [total, setTotal] = useState();
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     setTotal(
@@ -23,23 +25,40 @@ const Cart = () => {
     );
   }, [cart]);
 
+  const fetchData = toastId => {
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_ENDPOINT}/accept`, cart, {
+        headers: {
+          Accept: 'application/json',
+          Authorization: 'Bearer 1|xwi8t61ZmswGB9RhrNkbyhaf3FBeozuttJuIGuMM',
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(res => {
+        setLoading(false);
+        toast.success('Berhasil dipesan', {
+          id: toastId,
+        });
+        localStorage.clear('cart');
+        setTimeout(() => window.location.reload(), 2200);
+        console.log(res);
+      })
+      .catch(err => {
+        setLoading(false);
+        toast.error('Gagal dipesan', {
+          id: toastId,
+        });
+        console.log('nya', err);
+      });
+  };
+
   const handleSubmit = e => {
     e.preventDefault();
+    setLoading(true);
+    const toastLoading = toast.loading('Sedang memesan...');
+
     setTimeout(() => {
-      axios
-        .post(`${process.env.REACT_APP_BACKEND_ENDPOINT}/accept`, cart, {
-          headers: {
-            Accept: 'application/json',
-            Authorization: 'Bearer 1|xwi8t61ZmswGB9RhrNkbyhaf3FBeozuttJuIGuMM',
-            'Content-Type': 'application/json',
-          },
-        })
-        .then(res => {
-          console.log(res);
-        })
-        .catch(err => {
-          console.log('nya', err);
-        });
+      fetchData(toastLoading);
     }, 2000);
   };
 
@@ -111,8 +130,14 @@ const Cart = () => {
       </main>
       {/* Detail information about items in the cart and total price */}
       {cart.length > 0 && (
-        <FooterCart cart={cart} total={total} handleSubmit={handleSubmit} />
+        <FooterCart
+          cart={cart}
+          total={total}
+          handleSubmit={handleSubmit}
+          loading={isLoading}
+        />
       )}
+      <Toaster />
     </div>
   );
 };
