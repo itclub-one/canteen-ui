@@ -1,9 +1,10 @@
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { CartState } from '../../context/Context';
-import { Link } from 'react-router-dom';
 import Header from '../../components/Header/Header';
+import EmptyCart from '../../layouts/static/EmptyCart';
 import ProductCart from '../../components/Product/ProductCart';
-import { ReactComponent as NoCart } from '../../assets/img/empty-cart.svg';
+import FooterCart from '../../layouts/FooterCart';
 
 const Cart = () => {
   const {
@@ -22,9 +23,24 @@ const Cart = () => {
     );
   }, [cart]);
 
-  const formatPrice = price => {
-    const rupiah = price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
-    return `Rp${rupiah}`;
+  const handleSubmit = e => {
+    e.preventDefault();
+    setTimeout(() => {
+      axios
+        .post(`${process.env.REACT_APP_BACKEND_ENDPOINT}/accept`, cart, {
+          headers: {
+            Accept: 'application/json',
+            Authorization: 'Bearer 1|xwi8t61ZmswGB9RhrNkbyhaf3FBeozuttJuIGuMM',
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log('nya', err);
+        });
+    }, 2000);
   };
 
   return (
@@ -37,22 +53,12 @@ const Cart = () => {
       />
 
       <main className="mb-auto">
-        {cart.length === 0 && (
-          <div className="flex flex-col justify-center items-center my-28 text-gray-400">
-            <NoCart className="text-center" />
-            <h5 className="pt-5 font-bold text-lg text-gray-600">
-              Keranjangmu masih Kosong!
-            </h5>
-            <Link
-              to="/"
-              className="py-1 px-4 mt-3 bg-indigo-500 text-gray-100 rounded-md shadow-md outline-none"
-            >
-              Mulai Belanja
-            </Link>
-          </div>
-        )}
+        {/* Component below will render when there's no item in the cart */}
+        {cart.length === 0 && <EmptyCart path="/" />}
+        {/* Component below will render when there's item(s) in the cart */}
         {cart.map(prod => (
           <ProductCart
+            key={prod.id}
             product={prod}
             handler={{
               change: e =>
@@ -100,51 +106,12 @@ const Cart = () => {
                 });
               },
             }}
-            key={prod.id}
           />
         ))}
       </main>
+      {/* Detail information about items in the cart and total price */}
       {cart.length > 0 && (
-        <footer className="h-48 sticky inset-x-0 bottom-0 rounded-t-lg bg-white border-t z-40 flex flex-col justify-evenly">
-          <div className="mx-4 border-t-2 border-indigo-200">
-            <h4 className="font-bold pt-4 pb-1">Detail Pembayaran</h4>
-            <ul className="text-sm text-gray-900">
-              <li className="flex flex-row justify-between">
-                <p>Jumlah Pesanan</p>
-                <b>
-                  {cart.reduce((n, { qty }) => n + qty, 0) <= 0
-                    ? '-'
-                    : cart.reduce((n, { qty }) => n + qty, 0) === 1
-                    ? `${cart.reduce((n, { qty }) => n + qty, 0)} item`
-                    : `${cart.reduce((n, { qty }) => n + qty, 0)} items`}
-                </b>
-              </li>
-              <li className="flex flex-row justify-between">
-                <p>Total Harga</p>
-                <b>{total ? formatPrice(total) : '-'}</b>
-              </li>
-            </ul>
-          </div>
-          <div className="mx-4 mb-2">
-            {total <= 100000 ? (
-              <button className=" w-full py-2 rounded-md shadow-md text-base font-medium text-white  bg-indigo-500 active:bg-indigo-600 hover:bg-indigo-600 focus:ring-indigo-500  focus:outline-none focus:ring-2 focus:ring-offset-2">
-                Pesan
-              </button>
-            ) : (
-              <>
-                <button
-                  className=" w-full py-2 rounded-md shadow-md text-base font-medium text-gray-500  bg-gray-200"
-                  disabled
-                >
-                  Pesan
-                </button>
-                <span className="py-1 m-0 text-xs text-red-600 font-normal float-right">
-                  Pesananmu melebihi limit
-                </span>
-              </>
-            )}
-          </div>
-        </footer>
+        <FooterCart cart={cart} total={total} handleSubmit={handleSubmit} />
       )}
     </div>
   );
