@@ -4,7 +4,7 @@ import Header from '../../components/Header/Header';
 const Category = () => {
   return (
     <>
-      <Header title="Produk Saya" subTitle="Kategori" />
+      <Header title="Produk Saya" subTitle="Kategori" path={'/'} />
       <CategoryCard name="makanan" quantity="10" />
     </>
   );

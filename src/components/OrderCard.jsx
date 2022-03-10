@@ -55,7 +55,7 @@ const OrderCard = () => {
         <Sheet.Container>
           <Sheet.Header />
           <Sheet.Content>
-            <div className="mx-4 flex flex-col h-full justify-between text-gray-900">
+            <div className="mx-4 flex flex-col h-full justify-between text-gray-900 overflow-auto">
               <div className="pb-4 px-1 border-b-2">
                 <h5 className="text-lg font-semibold">Detail Pesanan</h5>
                 <div className="px-2">
