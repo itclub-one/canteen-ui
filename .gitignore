@@ -4,9 +4,16 @@
 /node_modules
 /.pnp
 .pnp.js
+/data
+/data/data-products.json
+/data/*
 
 # testing
 /coverage
+
+# dev
+/data
+/data/*
 
 # production
 /build
