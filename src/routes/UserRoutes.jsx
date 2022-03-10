@@ -8,6 +8,7 @@ import Category from '../pages/Store/Category';
 import ProfileStore from '../pages/Store/ProfileStore';
 import DetailsCategory from '../pages/Store/DetailsCategory';
 import HomeStore from '../pages/Store/HomeStore';
+import OrderListStore from '../pages/Store/OrderListStore';
 
 const UserRoutes = () => {
   return (
@@ -19,6 +20,7 @@ const UserRoutes = () => {
       <Route path="order/details" element={<OrderDetails />} />
       <Route path="store" element={<HomeStore />} />
       <Route path="store/profile" element={<ProfileStore />} />
+      <Route path="store/order" element={<OrderListStore />} />
       <Route path="store/category" element={<Category />} />
       <Route path="store/category/details" element={<DetailsCategory />} />
       <Route
