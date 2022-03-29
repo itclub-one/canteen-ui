@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Link, Outlet } from 'react-router-dom';
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import Header from '../../components/Header/Header';
@@ -56,6 +57,7 @@ const OrderList = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <OrderListUI />
+      <Outlet />
 
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
@@ -120,13 +122,18 @@ const OrderListUI = () => {
             }
             footer={
               <>
-                <button className="mx-2 my-1 font-medium border bg-indigo-200 text-indigo-700 rounded-md py-1 px-4 active:bg-indigo-500 active:text-white hover:bg-indigo-500 hover:text-white">
+                <Link
+                  to={`/order/${order.order_code}`}
+                  className="mx-2 my-1 font-medium border bg-indigo-200 text-indigo-700 rounded-md py-1 px-4 active:bg-indigo-500 active:text-white hover:bg-indigo-500 hover:text-white"
+                >
                   Lihat Detail
-                </button>
+                </Link>
               </>
             }
           />
         ))}
+
+      <Outlet />
     </>
   );
 };

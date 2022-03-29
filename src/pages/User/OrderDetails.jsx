@@ -1,13 +1,21 @@
-import Header from '../../components/Header/Header';
 import Tabs from '../../components/Tabs';
 import { Tab } from '@headlessui/react';
-import ShoppingDetails from '../../components/ShoppingDetails';
-import ShoppingList from '../../components/ShoppingList';
+import Header from '../../components/Header/Header';
+import ShoppingDetails from '../../layouts/ShoppingDetails';
+import ShoppingList from '../../layouts/ShoppingList';
+import { useParams } from 'react-router-dom';
 
 const OrderDetails = () => {
+  const params = useParams();
+
   return (
     <>
-      <Header title="Belanja" subTitle={'#PQ102010382932'} rightBtn={null} />
+      <Header
+        path={`/order`}
+        title="Detail Pesanan"
+        subTitle={params.orderId}
+        rightBtn={null}
+      />
       <Tabs
         tabCategories={{
           left: 'Detail Belanja',

@@ -1,5 +1,7 @@
 import { CartState } from '../../context/Context';
+import { Outlet } from 'react-router-dom';
 import HomeHeader from '../../components/Header/HomeHeader';
+import NetProblem from '../../layouts/static/NetProblem';
 import SearchBar from '../../components/SearchBar';
 import ProductGroup from '../../components/Product/ProductsGroup';
 
@@ -15,16 +17,7 @@ const HomeCatalogue = () => {
         cartLength={cart.length}
       />
 
-      <SearchBar
-        placeholder={'Cari Menu Favoritmu ...'}
-        handleInput={e => e.target.value.toLowerCase()}
-      />
-
-      {error && (
-        <div className="text-base font-bold text-center m-auto text-red-600">
-          {error.message}
-        </div>
-      )}
+      {error && <NetProblem error={error} />}
       {loading && (
         <div className="flex flex-col items-center justify-center">
           <div
@@ -33,8 +26,20 @@ const HomeCatalogue = () => {
           ></div>
         </div>
       )}
-      {data &&
-        data.stores.map(store => <ProductGroup store={store} key={store.id} />)}
+      {data && (
+        <>
+          <SearchBar
+            placeholder={'Cari Menu Favoritmu ...'}
+            handleInput={e => e.target.value.toLowerCase()}
+          />
+
+          {data.stores.map(store => (
+            <ProductGroup store={store} key={store.id} />
+          ))}
+        </>
+      )}
+
+      <Outlet />
     </>
   );
 };

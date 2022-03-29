@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import StoreHeader from '../../components/Header/StoreHeader';
 import OrderCard from '../../components/OrderCard';
 
@@ -45,6 +45,8 @@ const HomeStore = () => {
         Pesanan Masuk
       </h4>
       <OrderCard />
+
+      <Outlet />
     </>
   );
 };
