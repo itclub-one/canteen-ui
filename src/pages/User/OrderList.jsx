@@ -2,39 +2,13 @@ import axios from 'axios';
 import { Link, Outlet } from 'react-router-dom';
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { formatPrice, convertDate } from '../../Utils/Utils';
 import Header from '../../components/Header/Header';
 import Filter from '../../components/Filter';
 import InvoiceCard from '../../components/Invoice/InvoiceCard';
 
 // * Create query client
 const queryClient = new QueryClient();
-
-const formatPrice = price => {
-  const rupiah = price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
-  return `Rp${rupiah}`;
-};
-
-const convertDate = date => {
-  const month = [
-    'Januari',
-    'Februari',
-    'Maret',
-    'April',
-    'Mei',
-    'Juni',
-    'Juli',
-    'Agustus',
-    'September',
-    'Oktober',
-    'November',
-    'Desember',
-  ];
-  const parseDate = Date.parse(date);
-  const newDate = new Date(parseDate);
-  const mm = month[newDate.getMonth()];
-
-  return `${newDate.getDate()} ${mm} ${newDate.getFullYear()}`;
-};
 
 // * Func for fetching data
 const fetcher = async () => {
@@ -87,7 +61,7 @@ const OrderListUI = () => {
       {status === 'error' && <div>Error: {error.message}</div>}
 
       {status === 'success' &&
-        data.orders.map(order => (
+        (data || data.orders).map(order => (
           <InvoiceCard
             key={order.order_code}
             title={order.order_code}
