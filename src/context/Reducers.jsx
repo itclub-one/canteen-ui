@@ -17,7 +17,7 @@ export const cartReducer = (state, action) => {
     case 'ADD_TO_CART':
       return {
         ...state,
-        cart: [...state.cart, { ...action.payload, qty: 1, note: '' }],
+        cart: [...state.cart, { ...action.payload, product_id: action.payload.id, amount: 1, customer_notes: '' }],
       };
     case 'REMOVE_FROM_CART':
       return {
@@ -28,14 +28,14 @@ export const cartReducer = (state, action) => {
       return {
         ...state,
         cart: state.cart.filter(c =>
-          c.id === action.payload.id ? (c.qty = action.payload.qty) : c.qty
+          c.id === action.payload.id ? (c.amount = action.payload.amount) : c.amount
         ),
       };
     case 'CHANGE_CART_NOTE':
       return {
         ...state,
         cart: state.cart.map(c =>
-          c.id === action.payload.id ? { ...c, note: action.payload.note } : c
+          c.id === action.payload.id ? { ...c, customer_notes: action.payload.customer_notes } : c
         ),
       };
     default:
