@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { CartState } from '../../context/Context';
+import { CartState } from '../../context/CartContext';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import Header from '../../components/Header/Header';
 import EmptyCart from '../../layouts/static/EmptyCart';
@@ -8,10 +9,9 @@ import ProductCart from '../../components/Product/ProductCart';
 import FooterCart from '../../layouts/FooterCart';
 
 const Cart = () => {
-  const {
-    state: { cart },
-    dispatch,
-  } = CartState();
+  const { cart, dispatch } = CartState();
+
+  let navigate = useNavigate();
 
   const [total, setTotal] = useState();
   const [isLoading, setLoading] = useState(false);
@@ -19,36 +19,51 @@ const Cart = () => {
   useEffect(() => {
     setTotal(
       cart.reduce(
-        (acc, curr) => acc + parseInt(curr.user_price_rounded) * curr.qty,
+        (acc, curr) => acc + parseInt(curr.user_price_rounded) * curr.amount,
         0
       )
     );
   }, [cart]);
 
-  const fetchData = toastId => {
+  const sendData = toastId => {
     axios
-      .post(`${process.env.REACT_APP_BACKEND_ENDPOINT}/accept`, cart, {
-        headers: {
-          Accept: 'application/json',
-          Authorization: 'Bearer 1|xwi8t61ZmswGB9RhrNkbyhaf3FBeozuttJuIGuMM',
-          'Content-Type': 'application/json',
+      .post(
+        `${process.env.REACT_APP_BACKEND_ENDPOINT}/req`,
+        {
+          items: cart.map(c => {
+            return {
+              product_id: c.product_id,
+              amount: c.amount,
+              customer_notes: c.customer_notes,
+            };
+          }),
         },
-      })
+        {
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${process.env.REACT_APP_BEARER}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
       .then(res => {
+        console.log('post res', res);
         setLoading(false);
         toast.success('Berhasil dipesan', {
           id: toastId,
         });
-        localStorage.clear('cart');
-        setTimeout(() => window.location.reload(), 2200);
-        console.log(res);
+        dispatch({ type: 'CLEAR_CART' });
+        setTimeout(() => {
+          navigate('/order');
+        }, 3000);
+        return res;
       })
       .catch(err => {
         setLoading(false);
         toast.error('Gagal dipesan', {
           id: toastId,
         });
-        console.log('nya', err);
+        console.error(err);
       });
   };
 
@@ -57,9 +72,7 @@ const Cart = () => {
     setLoading(true);
     const toastLoading = toast.loading('Sedang memesan...');
 
-    setTimeout(() => {
-      fetchData(toastLoading);
-    }, 2000);
+    sendData(toastLoading);
   };
 
   return (
@@ -85,7 +98,7 @@ const Cart = () => {
                   type: 'CHANGE_CART_QTY',
                   payload: {
                     id: prod.id,
-                    qty: parseInt(e.target.value),
+                    amount: parseInt(e.target.value),
                   },
                 }),
               changeNote: e =>
@@ -93,7 +106,7 @@ const Cart = () => {
                   type: 'CHANGE_CART_NOTE',
                   payload: {
                     id: prod.id,
-                    note: String(e.target.value),
+                    customer_notes: String(e.target.value),
                   },
                 }),
               increase: () =>
@@ -101,11 +114,11 @@ const Cart = () => {
                   type: 'CHANGE_CART_QTY',
                   payload: {
                     id: prod.id,
-                    qty: prod.qty + 1,
+                    amount: prod.amount + 1,
                   },
                 }),
               decrease: () => {
-                prod.qty < 1
+                prod.amount < 1
                   ? dispatch({
                       type: 'REMOVE_FROM_CART',
                       payload: prod,
@@ -114,7 +127,7 @@ const Cart = () => {
                       type: 'CHANGE_CART_QTY',
                       payload: {
                         id: prod.id,
-                        qty: prod.qty - 1,
+                        amount: prod.amount - 1,
                       },
                     });
               },
@@ -128,6 +141,7 @@ const Cart = () => {
           />
         ))}
       </main>
+
       {/* Detail information about items in the cart and total price */}
       {cart.length > 0 && (
         <FooterCart
@@ -137,6 +151,7 @@ const Cart = () => {
           loading={isLoading}
         />
       )}
+
       <Toaster />
     </div>
   );

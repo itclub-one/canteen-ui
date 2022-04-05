@@ -1,14 +1,47 @@
-import { CartState } from '../../context/Context';
+import axios from 'axios';
 import { Outlet } from 'react-router-dom';
+import { CartState } from '../../context/CartContext';
+import { QueryClientProvider, QueryClient, useQuery } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import HomeHeader from '../../components/Header/HomeHeader';
 import NetProblem from '../../layouts/static/NetProblem';
 import SearchBar from '../../components/SearchBar';
 import ProductGroup from '../../components/Product/ProductsGroup';
 
+const queryClient = new QueryClient();
+
+// * Func for fetch data
+const fetcher = async () => {
+  const response = await axios.get(
+    `${process.env.REACT_APP_BACKEND_ENDPOINT}/products`,
+    {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${process.env.REACT_APP_BEARER}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+
+  return response.data;
+};
+
+// * Integrating components page with React Query Provider
 const HomeCatalogue = () => {
-  const {
-    state: { data, cart, loading, error },
-  } = CartState();
+  return (
+    <QueryClientProvider client={queryClient}>
+      <HomeCatalogueUI />
+
+      <ReactQueryDevtools />
+    </QueryClientProvider>
+  );
+};
+
+// * Components page
+const HomeCatalogueUI = () => {
+  const { data, status, error } = useQuery('products', fetcher);
+
+  const { cart } = CartState();
 
   return (
     <>
@@ -17,8 +50,12 @@ const HomeCatalogue = () => {
         cartLength={cart.length}
       />
 
-      {error && <NetProblem error={error} />}
-      {loading && (
+      <SearchBar
+        placeholder={'Cari Menu Favoritmu ...'}
+        handleInput={e => e.target.value.toLowerCase()}
+      />
+
+      {status === 'loading' && (
         <div className="flex flex-col items-center justify-center">
           <div
             style={{ borderTopColor: 'transparent' }}
@@ -26,18 +63,11 @@ const HomeCatalogue = () => {
           ></div>
         </div>
       )}
-      {data && (
-        <>
-          <SearchBar
-            placeholder={'Cari Menu Favoritmu ...'}
-            handleInput={e => e.target.value.toLowerCase()}
-          />
 
-          {data.stores.map(store => (
-            <ProductGroup store={store} key={store.id} />
-          ))}
-        </>
-      )}
+      {status === 'error' && <NetProblem error={error} />}
+
+      {status === 'success' &&
+        data.stores.map(store => <ProductGroup store={store} key={store.id} />)}
 
       <Outlet />
     </>

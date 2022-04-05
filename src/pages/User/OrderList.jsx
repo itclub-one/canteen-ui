@@ -31,7 +31,6 @@ const OrderList = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <OrderListUI />
-      <Outlet />
 
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
@@ -61,7 +60,7 @@ const OrderListUI = () => {
       {status === 'error' && <div>Error: {error.message}</div>}
 
       {status === 'success' &&
-        (data || data.orders).map(order => (
+        (data || data.order).map(order => (
           <InvoiceCard
             key={order.order_code}
             title={order.order_code}
@@ -72,7 +71,7 @@ const OrderListUI = () => {
                 <ul className="px-1 mt-1">
                   <li className="flex flex-row justify-between">
                     <p>Status Pesanan: </p>
-                    <p className="font-bold">{order.status.name}</p>
+                    <p className="font-bold">{order.status?.name}</p>
                   </li>
                   <li className="flex flex-row justify-between">
                     <p>Status Pembayaran: </p>
@@ -87,8 +86,8 @@ const OrderListUI = () => {
                   <li className="flex flex-row justify-between">
                     <p>Jumlah Barang: </p>
                     <p className="font-bold">
-                      {order.order_details.length}{' '}
-                      {order.order_details.length > 1 ? 'items' : 'item'}
+                      {order.order_details?.length}{' '}
+                      {order.order_details?.length > 1 ? 'items' : 'item'}
                     </p>
                   </li>
                 </ul>
