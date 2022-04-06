@@ -43,11 +43,16 @@ const HomeCatalogueUI = () => {
 
   const { cart } = CartState();
 
+  const menuItems = [
+    { id: 1, path: '/profile', name: 'Profil' },
+    { id: 2, path: '/order', name: 'Pesanan Saya' },
+  ];
+
   return (
     <>
       <HomeHeader
-        path={{ cart: '/cart', profile: '/profile', order: '/order' }}
-        cartLength={cart.length}
+        menuItems={menuItems}
+        cart={{ path: '/cart', length: cart.length }}
       />
 
       <SearchBar

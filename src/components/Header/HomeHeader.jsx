@@ -48,7 +48,7 @@ function MyLink({ href, children, ...rest }) {
   );
 }
 
-const HomeHeader = ({ path, cartLength }) => {
+const HomeHeader = ({ menuItems, cart }) => {
   return (
     <header className="h-18 sticky top-0 mb-2 bg-slate-50 shadow-sm z-40">
       <div className="h-16 flex flex-row-reverse items-center px-3">
@@ -82,30 +82,20 @@ const HomeHeader = ({ path, cartLength }) => {
           >
             <Menu.Items className="absolute right-2 top-12 w-36 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="px-1 py-1 ">
-                <Menu.Item>
-                  {({ active }) => (
-                    <MyLink
-                      href={path.profile}
-                      className={`${
-                        active ? 'bg-indigo-500 text-white' : 'text-gray-900'
-                      } group flex rounded-md items-center w-full px-2 py-2 text-sm active:bg-indigo-500 active:text-white`}
-                    >
-                      Profil
-                    </MyLink>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <MyLink
-                      href={path.order}
-                      className={`${
-                        active ? 'bg-indigo-500 text-white' : 'text-gray-900'
-                      } group flex rounded-md items-center w-full px-2 py-2 text-sm active:bg-indigo-500 active:text-white`}
-                    >
-                      Pesanan Saya
-                    </MyLink>
-                  )}
-                </Menu.Item>
+                {menuItems?.map(menu => (
+                  <Menu.Item key={menu.id}>
+                    {({ active }) => (
+                      <MyLink
+                        href={menu.path}
+                        className={`${
+                          active ? 'bg-indigo-500 text-white' : 'text-gray-900'
+                        } group flex rounded-md items-center w-full px-2 py-2 text-sm active:bg-indigo-500 active:text-white`}
+                      >
+                        {menu.name}
+                      </MyLink>
+                    )}
+                  </Menu.Item>
+                ))}
               </div>
               <div className="px-1 py-1">
                 <Menu.Item>
@@ -135,32 +125,34 @@ const HomeHeader = ({ path, cartLength }) => {
             </Menu.Items>
           </Transition>
         </Menu>
-        <div className="relative text-white">
-          <Link to={path.cart}>
-            {cartLength >= 1 && (
-              <span
-                className="w-4 h-4 rounded-full absolute left-4 bottom-4 text-center leading-4 bg-red-600"
-                style={{ fontSize: '0.6rem' }}
+        {cart && (
+          <div className="relative text-white">
+            <Link to={cart.path}>
+              {cart.length >= 1 && (
+                <span
+                  className="w-4 h-4 rounded-full absolute left-4 bottom-4 text-center leading-4 bg-red-600"
+                  style={{ fontSize: '0.6rem' }}
+                >
+                  {cart.length <= 9 ? cart.length : '9+'}
+                </span>
+              )}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-6 h-6 text-gray-900 active:bg-indigo-200"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                {cartLength <= 9 ? cartLength : '9+'}
-              </span>
-            )}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-6 h-6 text-gray-900 active:bg-indigo-200"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
-          </Link>
-        </div>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                />
+              </svg>
+            </Link>
+          </div>
+        )}
       </div>
     </header>
   );

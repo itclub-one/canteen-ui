@@ -1,13 +1,17 @@
 import { Link, Outlet } from 'react-router-dom';
-import StoreHeader from '../../components/Header/StoreHeader';
+import HomeHeader from '../../components/Header/HomeHeader';
 import OrderCard from '../../components/OrderCard';
+
+const menuItems = [
+  { id: 1, path: '/store/profile', name: 'Informasi Toko' },
+  { id: 2, path: '/store/category', name: 'Menu Saya' },
+  { id: 3, path: '/store/order', name: 'Daftar Pesanan' },
+];
 
 const HomeStore = () => {
   return (
     <>
-      <StoreHeader
-        path={{ profile: '/store/profile', order: '/store/order' }}
-      />
+      <HomeHeader menuItems={menuItems} cart={null} />
 
       {/* Notification if Store not open yet */}
       <div className="mx-6 my-4 py-3 text-sm flex flex-row items-center font-medium bg-yellow-100 rounded-md border-2 border-amber-300">
