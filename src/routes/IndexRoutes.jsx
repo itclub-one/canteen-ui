@@ -11,6 +11,7 @@ import ProfileStore from '../pages/Store/ProfileStore';
 import OrderListStore from '../pages/Store/OrderListStore';
 import Category from '../pages/Store/Category';
 import DetailsCategory from '../pages/Store/DetailsCategory';
+import Transactions from '../pages/Cashier/Transactions';
 
 const IndexRoutes = () => {
   return (
@@ -24,16 +25,22 @@ const IndexRoutes = () => {
           <Route index element={<OrderList />} />
           <Route path=":orderId" element={<OrderDetails />} />
         </Route>
+      </Route>
 
-        {/* // * Routes for stores */}
-        <Route path="store">
-          <Route index element={<HomeStore />} />
-          <Route path="profile" element={<ProfileStore />} />
-          <Route path="order" element={<OrderListStore />} />
-          <Route path="category">
-            <Route index element={<Category />} />
-            <Route path=":categoryId" element={<DetailsCategory />} />
-          </Route>
+      {/* // * Routes for cashier */}
+      <Route path="cashier">
+        <Route index element={<h1>Hello</h1>} />
+        <Route path="transactions" element={<Transactions />} />
+      </Route>
+
+      {/* // * Routes for stores */}
+      <Route path="store">
+        <Route index element={<HomeStore />} />
+        <Route path="profile" element={<ProfileStore />} />
+        <Route path="order" element={<OrderListStore />} />
+        <Route path="category">
+          <Route index element={<Category />} />
+          <Route path=":categoryId" element={<DetailsCategory />} />
         </Route>
       </Route>
 
