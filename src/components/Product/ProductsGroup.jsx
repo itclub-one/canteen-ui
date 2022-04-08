@@ -1,6 +1,11 @@
 import ProductCard from './ProductCard';
+import { CartState } from '../../context/CartContext';
 
 const ProductsGroup = ({ store }) => {
+  const { cart, dispatch } = CartState();
+
+  const matchProd = item => cart.find(prod => item.id === prod.id);
+
   return (
     <div
       className="w-full rounded-sm bg-gradient-to-b from-white to-slate-50"
@@ -26,7 +31,58 @@ const ProductsGroup = ({ store }) => {
       </div>
       {/* List Products */}
       <div className="flex flex-row justify-evenly flex-wrap">
-        <ProductCard products={store.products} />
+        {store.products.map(product => (
+          <ProductCard
+            product={product}
+            key={product.id}
+            handler={{
+              change: e =>
+                dispatch({
+                  type: 'CHANGE_CART_QTY',
+                  payload: {
+                    id: matchProd(product).id,
+                    amount: parseInt(e.target.value),
+                  },
+                }),
+              changeNote: e =>
+                dispatch({
+                  type: 'CHANGE_CART_NOTE',
+                  payload: {
+                    id: matchProd(product).id,
+                    customer_notes: String(e.target.value),
+                  },
+                }),
+              increase: () =>
+                dispatch({
+                  type: 'CHANGE_CART_QTY',
+                  payload: {
+                    id: matchProd(product).id,
+                    amount: matchProd(product).amount + 1,
+                  },
+                }),
+              decrease: () => {
+                matchProd(product).amount < 1
+                  ? dispatch({
+                      type: 'REMOVE_FROM_CART',
+                      payload: product,
+                    })
+                  : dispatch({
+                      type: 'CHANGE_CART_QTY',
+                      payload: {
+                        id: matchProd(product).id,
+                        amount: matchProd(product).amount - 1,
+                      },
+                    });
+              },
+              delete: () => {
+                dispatch({
+                  type: 'REMOVE_FROM_CART',
+                  payload: product,
+                });
+              },
+            }}
+          />
+        ))}
       </div>
     </div>
   );

@@ -1,15 +1,11 @@
 import { useState } from 'react';
+import { formatPrice } from '../../Utils/Utils';
 import Sheet from 'react-modal-sheet';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const ProductCart = ({ product, handler }) => {
   const [isOpen, setOpen] = useState(false);
-
-  const formatPrice = price => {
-    const rupiah = price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
-    return `${rupiah}`;
-  };
 
   const submitDelete = () => {
     confirmAlert({
@@ -58,10 +54,11 @@ const ProductCart = ({ product, handler }) => {
 
   return (
     <div className="w-full rounded bg-slate-50">
-      {/* Store Name */}
-      <h2 className="mt-6 px-3 text-lg font-semibold">{product.store.name}</h2>
+      {/* // * Store Name */}
+      {/* <h2 className="mt-6 px-3 text-lg font-semibold">{product.store.name}</h2> */}
+
       <div className="my-2 mx-4 flex bg-white shadow-md rounded-lg">
-        {/* Product Cart */}
+        {/* // * Product Cart */}
         <div className="w-1/3 p-2 self-center">
           <img
             className="rounded-lg"
@@ -73,24 +70,28 @@ const ProductCart = ({ product, handler }) => {
             alt="Product"
           />
         </div>
+
         <div className="w-2/3 px-4 py-2">
           <h3 className="font-medium text-lg text-gray-900">{product.name}</h3>
           <h4 className="font-bold text-sm text-gray-900">
-            Rp{formatPrice(product.user_price_rounded)}
+            {formatPrice(product.user_price_rounded)}
           </h4>
           <p className="text-gray-600 text-sm text-left">
             <b>catatan:</b>{' '}
-            {product.note
-              ? product.note.slice(0, 60) +
-                (product.note.length > 60 ? '...' : '')
+            {product.customer_notes
+              ? product.customer_notes.slice(0, 60) +
+                (product.customer_notes.length > 60 ? '...' : '')
               : '-'}
           </p>
+
+          {/* // * Button to add, remove, change notes */}
           <div className="flex flex-row flex-wrap items-center justify-between">
+            {/* // * increase and decrease amount of item */}
             <div className="flex flex-row p-2 h-10 w-28 rounded-lg justify-between">
               <button
                 onClick={handler.decrease}
                 className="bg-gray-200 text-indigo-700 hover:bg-gray-300 h-full w-12 rounded-l cursor-pointer disabled:text-gray-400 disabled:cursor-default disabled:bg-gray-200"
-                disabled={product.qty <= 1}
+                disabled={product.amount <= 1}
               >
                 <span className="m-auto text-lg">−</span>
               </button>
@@ -98,7 +99,7 @@ const ProductCart = ({ product, handler }) => {
                 type="number"
                 className="appearance-none outline-none focus:outline-none text-center w-full bg-gray-200 font-medium text-sm flex items-center text-gray-900"
                 min={1}
-                value={product.qty}
+                value={product.amount}
                 onChange={handler.change}
               ></input>
               <button
@@ -108,7 +109,9 @@ const ProductCart = ({ product, handler }) => {
                 <span className="m-auto text-lg">+</span>
               </button>
             </div>
+
             <div className="text-indigo-600 h-full">
+              {/* //* Delete item from cart */}
               <button
                 onClick={submitDelete}
                 className="my-2 rounded-md active:text-indigo-200 active:bg-indigo-600 "
@@ -128,6 +131,8 @@ const ProductCart = ({ product, handler }) => {
                   />
                 </svg>
               </button>
+
+              {/* // * Change Notes item */}
               <button
                 className="cursor-pointer my-2 mx-3 active:text-indigo-200 active:bg-indigo-600 rounded-md"
                 onClick={() => setOpen(true)}
@@ -147,6 +152,8 @@ const ProductCart = ({ product, handler }) => {
                   />
                 </svg>
               </button>
+
+              {/* // * Modal sheet for cart */}
               <Sheet
                 className="max-w-lg m-auto"
                 isOpen={isOpen}
@@ -165,11 +172,11 @@ const ProductCart = ({ product, handler }) => {
                         className="px-3 py-1 border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-indigo-500 block w-full rounded-md sm:text-sm focus:ring-1"
                         placeholder="Gak pake topping ya..."
                         maxLength={250}
-                        value={product.note}
+                        value={product.customer_notes}
                         onChange={handler.changeNote}
                       ></textarea>
                       <span className="text-sm text-right text-gray-700">
-                        {product.note.length}/250
+                        {product.customer_notes.length}/250
                       </span>
                       <button
                         className="py-2 mt-5 border shadow-sm rounded-md bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 focus:outline-none focus:ring focus:ring-indigo-300 text-white"
