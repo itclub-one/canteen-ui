@@ -1,0 +1,3 @@
+{
+  "/orders/:order_code": "/orders?order_code=:order_code"
+}
