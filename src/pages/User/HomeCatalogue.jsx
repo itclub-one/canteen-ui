@@ -48,6 +48,8 @@ const HomeCatalogueUI = () => {
     { id: 2, path: '/order', name: 'Pesanan Saya' },
   ];
 
+  // status === 'success' && console.log('lorem', data.data.products);
+
   return (
     <>
       <HomeHeader
@@ -71,8 +73,7 @@ const HomeCatalogueUI = () => {
 
       {status === 'error' && <NetProblem error={error} />}
 
-      {status === 'success' &&
-        data.stores.map(store => <ProductGroup store={store} key={store.id} />)}
+      {status === 'success' && <ProductGroup products={data?.data?.products} />}
 
       <Outlet />
     </>

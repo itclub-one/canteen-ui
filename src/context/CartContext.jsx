@@ -9,7 +9,6 @@ const CartProvider = ({ children }) => {
 
   // * Save cart state to local storage
   useEffect(() => {
-    console.log('Item(s) added to cart', cart);
     window.localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 

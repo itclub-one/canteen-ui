@@ -28,7 +28,7 @@ const Cart = () => {
   const sendData = toastId => {
     axios
       .post(
-        `${process.env.REACT_APP_BACKEND_ENDPOINT}/req`,
+        `${process.env.REACT_APP_BACKEND_ENDPOINT}/orders`,
         {
           items: cart.map(c => {
             return {

@@ -1,9 +1,6 @@
-const FooterCart = ({ cart, total, handleSubmit, loading }) => {
-  const formatPrice = price => {
-    const rupiah = price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
-    return `Rp${rupiah}`;
-  };
+import { LIMIT_TRX, formatPrice } from '../Utils/Utils';
 
+const FooterCart = ({ cart, total, handleSubmit, loading }) => {
   return (
     <footer className="h-48 sticky inset-x-0 bottom-0 rounded-t-lg bg-white border-t z-40 flex flex-col justify-evenly">
       <div className="mx-4 border-t-2 border-indigo-200">
@@ -12,11 +9,11 @@ const FooterCart = ({ cart, total, handleSubmit, loading }) => {
           <li className="flex flex-row justify-between">
             <p>Jumlah Pesanan</p>
             <b>
-              {cart.reduce((n, { qty }) => n + qty, 0) <= 0
+              {cart.reduce((n, { amount }) => n + amount, 0) <= 0
                 ? '-'
-                : cart.reduce((n, { qty }) => n + qty, 0) === 1
-                ? `${cart.reduce((n, { qty }) => n + qty, 0)} item`
-                : `${cart.reduce((n, { qty }) => n + qty, 0)} items`}
+                : cart.reduce((n, { amount }) => n + amount, 0) === 1
+                ? `${cart.reduce((n, { amount }) => n + amount, 0)} item`
+                : `${cart.reduce((n, { amount }) => n + amount, 0)} items`}
             </b>
           </li>
           <li className="flex flex-row justify-between">
@@ -27,7 +24,7 @@ const FooterCart = ({ cart, total, handleSubmit, loading }) => {
       </div>
       {/* Button for checkout */}
       <form className="mx-4 mb-2" onSubmit={handleSubmit}>
-        {total <= 100000 ? (
+        {total <= LIMIT_TRX ? (
           <button
             className={`${
               loading

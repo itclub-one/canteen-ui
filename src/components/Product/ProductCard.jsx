@@ -1,12 +1,13 @@
 import { CartState } from '../../context/CartContext';
 import { useState } from 'react';
-import { formatPrice } from '../../Utils/Utils';
 import Sheet from 'react-modal-sheet';
+import { useNavigate } from 'react-router-dom';
+import { formatPrice } from '../../Utils/Utils';
 
 const ProductCard = ({ product, handler }) => {
   const { cart, dispatch } = CartState();
   const [isOpen, setOpen] = useState(false);
-  const [noteIsOpen, setNoteOpen] = useState(false);
+  const navigate = useNavigate();
 
   const matchProd = item => cart.find(prod => item.id === prod.id);
 
@@ -82,7 +83,7 @@ const ProductCard = ({ product, handler }) => {
               {/* // * Change Notes item */}
               <button
                 className="cursor-pointer my-2 mx-3 active:text-indigo-200 active:bg-indigo-600 rounded-md"
-                onClick={() => setNoteOpen(true)}
+                onClick={() => navigate('/cart')}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -103,44 +104,6 @@ const ProductCard = ({ product, handler }) => {
           </div>
         )}
       </div>
-
-      {/* // * Modal sheet for add notes */}
-      <Sheet
-        className="max-w-lg m-auto"
-        isOpen={noteIsOpen}
-        onClose={() => setNoteOpen(false)}
-        snapPoints={[250, 150, 0]}
-        initialSnap={0}
-      >
-        <Sheet.Container>
-          <Sheet.Header />
-          <Sheet.Content>
-            <div className="mx-4 flex flex-col">
-              <span className="font-medium text-gray-900 pb-1">
-                Tambahkan catatan
-              </span>
-              <textarea
-                className="px-3 py-1 border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-indigo-500 block w-full rounded-md sm:text-sm focus:ring-1"
-                placeholder="Gak pake topping ya..."
-                maxLength={250}
-                value={matchProd(product)?.customer_notes}
-                onChange={handler.changeNote}
-              ></textarea>
-              <span className="text-sm text-right text-gray-700">
-                {matchProd(product)?.customer_notes?.length}
-                /250
-              </span>
-              <button
-                className="py-2 mt-5 border shadow-sm rounded-md bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 focus:outline-none focus:ring focus:ring-indigo-300 text-white"
-                onClick={() => setNoteOpen(false)}
-              >
-                Simpan
-              </button>
-            </div>
-          </Sheet.Content>
-        </Sheet.Container>
-        <Sheet.Backdrop onTap={() => setNoteOpen(false)} />
-      </Sheet>
 
       {/* // * Modal sheet for product description */}
       <Sheet

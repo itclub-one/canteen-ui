@@ -1,3 +1,5 @@
+export const LIMIT_TRX = 150_000;
+
 export function formatPrice(price) {
   const rupiah = price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
   return `Rp${rupiah}`;

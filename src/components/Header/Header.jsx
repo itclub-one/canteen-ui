@@ -30,8 +30,8 @@ const Header = ({ title, path, subTitle, rightBtn }) => {
         </div>
         {/* //* Right Button [option: add, more, null] */}
         <div className="basis-1/8 text-center mx-3">
-          {rightBtn === 'add' && (
-            <button className="text-slate-900">
+          {rightBtn?.type === 'add' && (
+            <button onClick={rightBtn?.handler} className="text-slate-900">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -48,8 +48,8 @@ const Header = ({ title, path, subTitle, rightBtn }) => {
               </svg>
             </button>
           )}
-          {rightBtn === 'more' && (
-            <button className="text-slate-900">
+          {rightBtn?.type === 'more' && (
+            <button onClick={rightBtn?.handler} className="text-slate-900">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
