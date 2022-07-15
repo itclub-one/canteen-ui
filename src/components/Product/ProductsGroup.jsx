@@ -1,18 +1,16 @@
 import ProductCard from './ProductCard';
 import { CartState } from '../../context/CartContext';
 
-const ProductsGroup = ({ store }) => {
+const ProductsGroup = ({ products }) => {
   const { cart, dispatch } = CartState();
 
   const matchProd = item => cart.find(prod => item.id === prod.id);
 
   return (
-    <div
-      className="w-full rounded-sm bg-gradient-to-b from-white to-slate-50"
-      key={store.id}
-    >
+    <div className="w-full rounded-sm bg-gradient-to-b from-white to-slate-50">
+      {/* // ! Need to Fix This Grouping */}
       {/* Product Store */}
-      <div className="flex flex-wrap flex-row items-center h-10 px-4 rounded-b-md border border-gray-50 bg-white text-gray-900 sticky top-16 z-30">
+      {/* <div className="flex flex-wrap flex-row items-center h-10 px-4 rounded-b-md border border-gray-50 bg-white text-gray-900 sticky top-16 z-30">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-5 w-5"
@@ -27,11 +25,12 @@ const ProductsGroup = ({ store }) => {
             d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
           />
         </svg>
-        <h4 className="text-sm font-semibold px-2">{store.name}</h4>
-      </div>
+        <h4 className="text-sm font-semibold px-2">{products.name}</h4>
+      </div> */}
+
       {/* List Products */}
       <div className="flex flex-row justify-evenly flex-wrap">
-        {store.products.map(product => (
+        {products.map(product => (
           <ProductCard
             product={product}
             key={product.id}
